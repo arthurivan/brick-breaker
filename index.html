@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+</head>
+<body>
+	<canvas id="gameCanvas" width="800" height="600"></canvas>
+	<script>
+		var canvas, cx;
+		//ball
+		var ballX = ballY = 75;
+		var ballXSpeed = 5;
+		var ballYSpeed = 5;
+		window.onload = function() {
+			console.log('hello world');
+
+			canvas = document.getElementById('gameCanvas');
+			cx = canvas.getContext('2d');
+
+			var framesPerSec = 30;
+			setInterval(function() {
+				moveEverything();
+				drawEverything();
+			}, 1000/framesPerSec);
+		}
+
+		function moveEverything() {
+			//bounce off right and left edge
+			if (ballX > canvas.width ||
+				  ballX < 0) {
+				ballXSpeed *= -1;
+			}
+			//bounce off top and bottom
+			if (ballY > canvas.height ||
+				  ballY < 0) {
+				ballYSpeed *= -1;
+			}
+			ballX += ballXSpeed;
+			ballY += ballYSpeed;
+			
+		}
+
+		function drawEverything() {
+			//background
+			cx.fillStyle = 'black';
+			cx.fillRect(0,0, canvas.width,canvas.height);
+
+			//ball
+			cx.fillStyle = 'white';
+			cx.beginPath();
+			cx.arc(ballX,ballY, 10, 0,7);
+			cx.fill();
+		}
+	</script>
+</body>
+</html>
