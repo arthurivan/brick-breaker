@@ -9,7 +9,8 @@
 	<script>
 		var canvas, cx;
 		//ball
-		var ballX = ballY = 75;
+		var ballX = 400;
+		var ballY = 100;
 		var ballXSpeed = 5;
 		var ballYSpeed = 5;
 		var ballRadius = 10;
@@ -86,10 +87,19 @@
 		function removeBrickAtPixelCoord(pixelX,pixelY) {
 			var brickTileCol = Math.floor(pixelX/BRICK_W);
 			var brickTileRow = Math.floor(pixelY/BRICK_H);
+
+	    if (brickTileCol < 0 ||
+		    	brickTileCol >= BRICK_COLS ||
+	        brickTileRow < 0 ||
+	        brickTileRow >= BRICK_ROWS) {
+	    	return;
+	    }
+
 			var brickIndex = brickTileToIndex(brickTileCol, brickTileRow);
-
-			brickGrid[brickIndex] = 0;
-
+			if (brickGrid[brickIndex] == 1) {
+				ballYSpeed *= -1;
+				brickGrid[brickIndex] = 0;
+			}
 		}
 
 		function moveEverything() {
@@ -117,13 +127,8 @@
 				}
 				
 			}
-
-			if (ballY > 0 &&
-				  ballY < BRICK_H * BRICK_ROWS &&
-				  ballX > 0 &&
-				  ballX < BRICK_COLS * BRICK_W) {
+			//brick zone
 				removeBrickAtPixelCoord(ballX, ballY);
-			}
 
 			ballX += ballXSpeed;
 			ballY += ballYSpeed;
