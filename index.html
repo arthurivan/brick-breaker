@@ -12,11 +12,39 @@
 		var ballX = ballY = 75;
 		var ballXSpeed = 5;
 		var ballYSpeed = 5;
+
+		//paddle
+		var paddleX = 350;
+		var paddleY = 540;
+		const PADDLE_WIDTH = 100;
+		const PADDLE_HEIGHT = 10;
+
+		function calculateMousePos(evt) {
+			//gets the borders of canvas
+			var rect = canvas.getBoundingClientRect();
+			//gets the document
+			var root = document.documentElement;
+
+			//place clicked - canvas pos - any scrolling
+ 			var mouseX = evt.clientX - rect.left - root.scrollLeft;
+			var mouseY = evt.clientY - rect.top - root.scrollTop;
+
+			return {
+				x: mouseX,
+				y: mouseY
+			}
+		}
+
 		window.onload = function() {
 			console.log('hello world');
 
 			canvas = document.getElementById('gameCanvas');
 			cx = canvas.getContext('2d');
+
+			canvas.addEventListener('mousemove', function(evt) {
+				var mousePos = calculateMousePos(evt);
+				paddleX = mousePos.x - (PADDLE_WIDTH/2);
+			})
 
 			var framesPerSec = 30;
 			setInterval(function() {
@@ -25,32 +53,57 @@
 			}, 1000/framesPerSec);
 		}
 
+		function ballReset() {
+			ballX = canvas.width/2;
+			ballY = canvas.height/2;
+		}
+
 		function moveEverything() {
 			//bounce off right and left edge
 			if (ballX > canvas.width ||
 				  ballX < 0) {
 				ballXSpeed *= -1;
 			}
-			//bounce off top and bottom
-			if (ballY > canvas.height ||
-				  ballY < 0) {
+			//bounce off top
+			if (ballY < 0) {
 				ballYSpeed *= -1;
 			}
+			if (ballY > canvas.height) {
+				ballReset();
+			}
+			//bounce off paddle
+			if (ballX > paddleX && ballX < paddleX + PADDLE_WIDTH &&
+				  ballY > paddleY && ballY < paddleY + PADDLE_HEIGHT) {
+				ballYSpeed *= -1;
+			}
+
 			ballX += ballXSpeed;
 			ballY += ballYSpeed;
 			
 		}
 
+		function colorCircle(centerX,centerY, size, color) {
+			cx.fillStyle = color;
+			cx.beginPath();
+			cx.arc(centerX,centerY, size, 0,7);
+			cx.fill();
+		}
+
+		function colorRect(topLeftX,topLeftY, width,height, color) {
+			cx.fillStyle = color;
+			cx.beginPath();
+			cx.fillRect(topLeftX,topLeftY, width,height);
+		}
+
 		function drawEverything() {
 			//background
-			cx.fillStyle = 'black';
-			cx.fillRect(0,0, canvas.width,canvas.height);
+			colorRect(0,0, canvas.width,canvas.height, 'black');
 
 			//ball
-			cx.fillStyle = 'white';
-			cx.beginPath();
-			cx.arc(ballX,ballY, 10, 0,7);
-			cx.fill();
+			colorCircle(ballX,ballY, 10, 'white');
+
+			//paddle
+			colorRect(paddleX,paddleY, PADDLE_WIDTH,PADDLE_HEIGHT, 'white');
 		}
 	</script>
 </body>
