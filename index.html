@@ -46,16 +46,16 @@
 
 		function resetBricks() {
 			for (var i = 0; i < BRICK_COLS * BRICK_ROWS; i++) {
-				if (Math.random() < 0.5) {
-					brickGrid[i] = 1;
-				} else {
-					brickGrid[i] = 0;
-				}
+				brickGrid[i] = 1;
 			}
 		}
 
+		function brickTileToIndex(tileCol, tileRow) {
+			return tileCol + tileRow*BRICK_COLS;
+		}
+
 		function isBrickAtTileCoord(brickTileCol, brickTileRow) {
-			var brickIndex = brickTileCol + brickTileRow*BRICK_COLS;
+			var brickIndex = brickTileToIndex(brickTileCol,brickTileRow);
 			return (brickGrid[brickIndex] == 1);
 		}
 
@@ -83,6 +83,15 @@
 			ballY = canvas.height/2;
 		}
 
+		function removeBrickAtPixelCoord(pixelX,pixelY) {
+			var brickTileCol = Math.floor(pixelX/BRICK_W);
+			var brickTileRow = Math.floor(pixelY/BRICK_H);
+			var brickIndex = brickTileToIndex(brickTileCol, brickTileRow);
+
+			brickGrid[brickIndex] = 0;
+
+		}
+
 		function moveEverything() {
 			//bounce off right and left edge
 			if (ballX > canvas.width ||
@@ -107,6 +116,13 @@
 					ballYSpeed *= -1;
 				}
 				
+			}
+
+			if (ballY > 0 &&
+				  ballY < BRICK_H * BRICK_ROWS &&
+				  ballX > 0 &&
+				  ballX < BRICK_COLS * BRICK_W) {
+				removeBrickAtPixelCoord(ballX, ballY);
 			}
 
 			ballX += ballXSpeed;
