@@ -12,6 +12,7 @@
 		var ballX = ballY = 75;
 		var ballXSpeed = 5;
 		var ballYSpeed = 5;
+		var ballRadius = 10;
 
 		//paddle
 		var paddleX = 350;
@@ -72,10 +73,12 @@
 				ballReset();
 			}
 			//bounce off paddle
-			if (ballX > paddleX && ballX < paddleX + PADDLE_WIDTH &&
-				  ballY > paddleY && ballY < paddleY + PADDLE_HEIGHT) {
+			if (ballX + ballRadius > paddleX &&
+				  ballX - ballRadius < paddleX + PADDLE_WIDTH &&
+				  ballY + ballRadius > paddleY &&
+				  ballY - ballRadius < paddleY + PADDLE_HEIGHT) {
 				var paddleCenter = paddleX + (PADDLE_WIDTH/2);
-				ballXSpeed = (ballX - paddleCenter) * .35;
+				ballXSpeed = (ballX - paddleCenter) * .30;
 				ballYSpeed *= -1;
 			}
 
@@ -102,7 +105,7 @@
 			colorRect(0,0, canvas.width,canvas.height, 'black');
 
 			//ball
-			colorCircle(ballX,ballY, 10, 'white');
+			colorCircle(ballX,ballY, ballRadius, 'white');
 
 			//paddle
 			colorRect(paddleX,paddleY, PADDLE_WIDTH,PADDLE_HEIGHT, 'white');
