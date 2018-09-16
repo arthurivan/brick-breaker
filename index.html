@@ -20,6 +20,13 @@
 		const PADDLE_WIDTH = 100;
 		const PADDLE_HEIGHT = 10;
 
+		//brick wall
+		const BRICK_W = 80;
+		const BRICK_H = 20;
+		const BRICK_GAP = 2;
+		const BRICK_COLS = 10;
+		const BRICK_ROWS = 14;
+
 		function calculateMousePos(evt) {
 			//gets the borders of canvas
 			var rect = canvas.getBoundingClientRect();
@@ -103,9 +110,20 @@
 			cx.fillRect(topLeftX,topLeftY, width,height);
 		}
 
+		function drawBricks() {
+			for (var i = 0; i < BRICK_ROWS; i++) {
+				for (var j = 0; j < BRICK_COLS; j++) {
+					colorRect(j*BRICK_W,i*BRICK_H, BRICK_W - BRICK_GAP,BRICK_H - BRICK_GAP, 'blue');
+				}
+			}
+		}
+
 		function drawEverything() {
 			//background
 			colorRect(0,0, canvas.width,canvas.height, 'black');
+
+			//bricks
+			drawBricks();
 
 			//ball
 			colorCircle(ballX,ballY, ballRadius, 'white');
