@@ -26,6 +26,7 @@
 		const BRICK_GAP = 2;
 		const BRICK_COLS = 10;
 		const BRICK_ROWS = 14;
+		var brickGrid = new Array(BRICK_COLS * BRICK_ROWS);
 
 		function calculateMousePos(evt) {
 			//gets the borders of canvas
@@ -43,11 +44,27 @@
 			}
 		}
 
-		window.onload = function() {
-			console.log('hello world');
+		function resetBricks() {
+			for (var i = 0; i < BRICK_COLS * BRICK_ROWS; i++) {
+				if (Math.random() < 0.5) {
+					brickGrid[i] = 1;
+				} else {
+					brickGrid[i] = 0;
+				}
+			}
+		}
 
+		function isBrickAtTileCoord(brickTileCol, brickTileRow) {
+			var brickIndex = brickTileCol + brickTileRow*BRICK_COLS;
+			return (brickGrid[brickIndex] == 1);
+		}
+
+		window.onload = function() {
+			
 			canvas = document.getElementById('gameCanvas');
 			cx = canvas.getContext('2d');
+
+			resetBricks();
 
 			canvas.addEventListener('mousemove', function(evt) {
 				var mousePos = calculateMousePos(evt);
@@ -113,7 +130,9 @@
 		function drawBricks() {
 			for (var i = 0; i < BRICK_ROWS; i++) {
 				for (var j = 0; j < BRICK_COLS; j++) {
-					colorRect(j*BRICK_W,i*BRICK_H, BRICK_W - BRICK_GAP,BRICK_H - BRICK_GAP, 'blue');
+					if (isBrickAtTileCoord(j,i)){
+						colorRect(j*BRICK_W,i*BRICK_H, BRICK_W - BRICK_GAP,BRICK_H - BRICK_GAP, 'blue');
+					}
 				}
 			}
 		}
