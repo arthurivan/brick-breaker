@@ -74,6 +74,8 @@
 			//bounce off paddle
 			if (ballX > paddleX && ballX < paddleX + PADDLE_WIDTH &&
 				  ballY > paddleY && ballY < paddleY + PADDLE_HEIGHT) {
+				var paddleCenter = paddleX + (PADDLE_WIDTH/2);
+				ballXSpeed = (ballX - paddleCenter) * .35;
 				ballYSpeed *= -1;
 			}
 
