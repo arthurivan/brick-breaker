@@ -73,13 +73,16 @@
 				ballReset();
 			}
 			//bounce off paddle
-			if (ballX + ballRadius > paddleX &&
-				  ballX - ballRadius < paddleX + PADDLE_WIDTH &&
-				  ballY + ballRadius > paddleY &&
-				  ballY - ballRadius < paddleY + PADDLE_HEIGHT) {
-				var paddleCenter = paddleX + (PADDLE_WIDTH/2);
-				ballXSpeed = (ballX - paddleCenter) * .30;
-				ballYSpeed *= -1;
+			if (ballYSpeed > 0) {
+				if (ballX + ballRadius > paddleX &&
+					  ballX - ballRadius < paddleX + PADDLE_WIDTH &&
+					  ballY + ballRadius > paddleY &&
+					  ballY - ballRadius < paddleY + PADDLE_HEIGHT) {
+					var paddleCenter = paddleX + (PADDLE_WIDTH/2);
+					ballXSpeed = (ballX - paddleCenter) * .30;
+					ballYSpeed *= -1;
+				}
+				
 			}
 
 			ballX += ballXSpeed;
