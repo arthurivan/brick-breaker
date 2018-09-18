@@ -11,8 +11,8 @@
 		//ball
 		var ballX = 400;
 		var ballY = 100;
-		var ballXSpeed = 5;
-		var ballYSpeed = 5;
+		var ballXSpeed = 2;
+		var ballYSpeed = 2;
 		var ballRadius = 10;
 
 		//paddle
@@ -84,10 +84,10 @@
 			ballY = canvas.height/2;
 		}
 
-		function removeBrickAtPixelCoord(pixelX,pixelY) {
-			var brickTileCol = Math.floor(pixelX/BRICK_W);
-			var brickTileRow = Math.floor(pixelY/BRICK_H);
-
+		function breakAndBounceOffBrickAtPixelCoord(ballX,ballY) {
+			var brickTileCol = Math.floor(ballX/BRICK_W);
+			var brickTileRow = Math.floor(ballY/BRICK_H);
+			//return if not a valid tile value
 	    if (brickTileCol < 0 ||
 		    	brickTileCol >= BRICK_COLS ||
 	        brickTileRow < 0 ||
@@ -97,7 +97,35 @@
 
 			var brickIndex = brickTileToIndex(brickTileCol, brickTileRow);
 			if (brickGrid[brickIndex] == 1) {
-				ballYSpeed *= -1;
+				var prevBallX = ballX - ballXSpeed;
+				var prevBallY = ballY - ballYSpeed;
+
+				var prevBrickTileCol = Math.floor(prevBallX/BRICK_W);
+				var prevBrickTileRow = Math.floor(prevBallY/BRICK_H);
+
+				var currentBrickTileCol = Math.floor(ballX/BRICK_W);
+				var currentBrickTileRow = Math.floor(ballY/BRICK_H);
+				//brick side collision
+				if (prevBrickTileRow == currentBrickTileRow) {
+					ballXSpeed *= -1;
+				}
+				if (prevBrickTileCol == currentBrickTileCol) {
+					ballYSpeed *= -1;
+				}
+				if ( ( (prevBrickTileCol == (currentBrickTileCol - 1) ) ||
+							 (prevBrickTileCol == (currentBrickTileCol + 1) )) &&
+						 ( (prevBrickTileRow == (currentBrickTileRow - 1) ) ||
+							 (prevBrickTileRow == (currentBrickTileRow + 1) ))
+						) {
+					var index = brickTileToIndex(currentBrickTileCol, prevBrickTileRow);
+					if (isBrickAtTileCoord(index)) {
+						ballXSpeed *= -1;
+						return;
+					}
+					ballXSpeed *= -1;
+					ballYSpeed *= -1;
+				}
+
 				brickGrid[brickIndex] = 0;
 			}
 		}
@@ -128,7 +156,7 @@
 				
 			}
 			//brick zone
-				removeBrickAtPixelCoord(ballX, ballY);
+			breakAndBounceOffBrickAtPixelCoord(ballX, ballY);
 
 			ballX += ballXSpeed;
 			ballY += ballYSpeed;
