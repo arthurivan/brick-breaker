@@ -10,9 +10,9 @@
 		var canvas, cx;
 		//ball
 		var ballX = 400;
-		var ballY = 100;
-		var ballXSpeed = 5;
-		var ballYSpeed = 5;
+		var ballY = 300;
+		var ballXSpeed = 0;
+		var ballYSpeed = 7;
 		var ballRadius = 10;
 
 		//paddle
@@ -28,6 +28,7 @@
 		const BRICK_COLS = 10;
 		const BRICK_ROWS = 11;
 		var brickGrid = new Array(BRICK_COLS * BRICK_ROWS);
+		var level = 1;
 
 		function calculateMousePos(evt) {
 			//gets the borders of canvas
@@ -47,12 +48,16 @@
 
 		function resetBricks() {
 			for (var i = 0; i < BRICK_COLS * BRICK_ROWS; i++) {
-				if (i < BRICK_COLS * 3) {
+				if ((i < BRICK_COLS * 3) ||
+					  (i%BRICK_COLS == 0) ||
+					  (i%BRICK_COLS == 9) ||
+					  (i%level == 0)) {
 					brickGrid[i] = 0;
 				} else {
 					brickGrid[i] = 1;
 				}
 			}
+			level++;
 		}
 
 		function brickTileToIndex(tileCol, tileRow) {
@@ -89,6 +94,7 @@
 		function ballReset() {
 			ballX = canvas.width/2;
 			ballY = canvas.height/2;
+			ballXSpeed = 0;
 		}
 
 		function breakAndBounceOffBrickAtPixelCoord(ballX,ballY) {
@@ -155,7 +161,7 @@
 					  ballY + ballRadius > paddleY &&
 					  ballY - ballRadius < paddleY + PADDLE_HEIGHT) {
 					var paddleCenter = paddleX + (PADDLE_WIDTH/2);
-					ballXSpeed = (ballX - paddleCenter) * .30;
+					ballXSpeed = (ballX - paddleCenter) * .20;
 					ballYSpeed *= -1;
 					if (!brickGrid.reduce(function(cur, next) {
 						return Math.max(cur,next);
