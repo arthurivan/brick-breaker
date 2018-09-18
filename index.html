@@ -11,8 +11,8 @@
 		//ball
 		var ballX = 400;
 		var ballY = 100;
-		var ballXSpeed = 2;
-		var ballYSpeed = 2;
+		var ballXSpeed = 5;
+		var ballYSpeed = 5;
 		var ballRadius = 10;
 
 		//paddle
@@ -103,29 +103,21 @@
 				var prevBrickTileCol = Math.floor(prevBallX/BRICK_W);
 				var prevBrickTileRow = Math.floor(prevBallY/BRICK_H);
 
-				var currentBrickTileCol = Math.floor(ballX/BRICK_W);
-				var currentBrickTileRow = Math.floor(ballY/BRICK_H);
-				//brick side collision
-				if (prevBrickTileRow == currentBrickTileRow) {
-					ballXSpeed *= -1;
-				}
-				if (prevBrickTileCol == currentBrickTileCol) {
-					ballYSpeed *= -1;
-				}
-				if ( ( (prevBrickTileCol == (currentBrickTileCol - 1) ) ||
-							 (prevBrickTileCol == (currentBrickTileCol + 1) )) &&
-						 ( (prevBrickTileRow == (currentBrickTileRow - 1) ) ||
-							 (prevBrickTileRow == (currentBrickTileRow + 1) ))
-						) {
-					var index = brickTileToIndex(currentBrickTileCol, prevBrickTileRow);
-					if (isBrickAtTileCoord(index)) {
+				if (prevBrickTileCol != brickTileCol) {
+					var adjBrickIndex = brickTileToIndex(prevBrickTileCol, brickTileRow);
+					if (brickGrid[adjBrickIndex] != 1) {
 						ballXSpeed *= -1;
-						return;
+						bothTestsFailed = false;
 					}
-					ballXSpeed *= -1;
-					ballYSpeed *= -1;
 				}
 
+				if (prevBrickTileRow != brickTileRow) {
+					var adjBrickIndex = brickTileToIndex(brickTileCol, prevBrickTileRow);
+					if (brickTileToIndex[adjBrickIndex] != 1) {
+						ballYSpeed *= -1;
+						bothTestsFailed = false;
+					}
+				}
 				brickGrid[brickIndex] = 0;
 			}
 		}
