@@ -26,7 +26,7 @@
 		const BRICK_H = 20;
 		const BRICK_GAP = 2;
 		const BRICK_COLS = 10;
-		const BRICK_ROWS = 14;
+		const BRICK_ROWS = 11;
 		var brickGrid = new Array(BRICK_COLS * BRICK_ROWS);
 
 		function calculateMousePos(evt) {
@@ -47,7 +47,11 @@
 
 		function resetBricks() {
 			for (var i = 0; i < BRICK_COLS * BRICK_ROWS; i++) {
-				brickGrid[i] = 1;
+				if (i < BRICK_COLS * 3) {
+					brickGrid[i] = 0;
+				} else {
+					brickGrid[i] = 1;
+				}
 			}
 		}
 
